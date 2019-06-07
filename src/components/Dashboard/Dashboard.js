@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import Wizard from '../Wizard/Wizard';
 import House from '../House/House';
@@ -13,6 +13,19 @@ class Dashboard extends Component {
     }
 
 
+    componentDidMount() {
+        axios.get('/api/houses')
+        .then(response => this.setState({houses: response.data}))
+        .catch(error => console.log('Dash get'))
+    };
+
+
+    deleteHouse(id) {
+        axios.delete(`/api/house/${id}`)
+        .then(() => this.componentDidMount)
+    };
+
+
 
 
     render() {
@@ -22,6 +35,11 @@ class Dashboard extends Component {
             return (
                 <House
                 key={houses.id}
+                id={houses.id}
+                name={houses.name}
+                address={houses.address}
+                city={houses.city}
+                zip={houses.zip}
                 />
             )
         })
@@ -36,6 +54,8 @@ class Dashboard extends Component {
                 Dashboard
                 <Link to='/Wizard'>Add New Property</Link>
                 <p>Home Listings</p>
+                {/* {displayHouses} */}
+                {/* <Wizard houses={this.props.houses} /> */}
             </div>
         )
     }

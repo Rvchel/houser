@@ -32,7 +32,22 @@ module.exports = {
     
     db.edit_house( id, name, city, state, zipcode, image_url, monthly_rent, monthly_mortgage )
     .then(response => res.status(200).json(response))
-    .catch(error => res.status(500).send(`controller-updateOne: ${error}`))
+    .catch(error => res.status(500).send(`controller update: ${error}`))
+    },
+
+
+
+    addHouse: (req,res) => {
+        const db = req.app.get('db')
+        const {name, address, city, state, zip_code, image_url, mortgage, rent} = req.body
+        db.add_house([name, address, city, state, zip_code, image_url, mortgage, rent])
+            .then(response => {
+                console.log(response)
+                res.status(200).send(response)
+            })
+            .catch(error =>{
+                res.status(500).send({errorMessage:`ADD ${error}`})
+            })
     }
 
 };

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
 import axios from 'axios';
+import {updateName, updateAdress, updateCity, updateState, updateZip, updateImg, getHouses} from '../../store';
 
 class Wizard extends Component {
     constructor() {
@@ -11,14 +12,15 @@ class Wizard extends Component {
             address: '',
             city: '',
             state: '',
-            zip: 0
+            zip: 0, 
+            redirect: false
         }; 
-            this.handleChange = this.handleChange.bind(this) 
+            // this.handleChange = this.handleChange.bind(this) 
     }
 
     componentDidMount() {
         if(this.props.match.params.id) {
-            axios.get('/api/properties')
+            axios.get('/api/houses')
             .then(response => {
                 this.setState({
                     name: response.data[0].name ,
@@ -42,30 +44,64 @@ class Wizard extends Component {
         }
     }
 
-    
-    
-    
-    handleChange(e) {
-        this.setState({ [e.target.name] : e.target.value });
-        console.log(e)
+
+
+
+    componentDidUpdate(prevProps) {
+        if(this.props.match.params.id!==prevProps.match.params.id) {
+            this.setState({
+                name: '',
+                address: '',
+                city: '',
+                state: '',
+                zip: 0,
+                houses: []
+            })
+        }
     }
 
     
+    
+    
+updateName(value) {
+this.setState({name: value})
+console.log(value)
+}
+
+
+updateAddress(value) {
+this.setState({adress: value})
+console.log(value)
+}
+
+
+handleEditSave() {
+let { name, address, city, state, zip } = this.state,
+    { id } = this.props.match.params;
+    
+axios.put('/api/house/:id', {name:name, address:address, city:city, state:state, zip:zip })
+    .then(this.setState({ redirect:true }))
+    .catch(error => console.log('wizard put'))
+}
+
+
 
 
     render() {
-        let {name, address, city, state, zip} = this.state
+        let {updateName, updateAddress, updateCity, updateState, updateZip, updateImg} = this.props
         return (
             <div>
                 Wizard
                 <Link to='/'>Cancel</Link>
 
 
-                Property Name<input type='text' value={name} name='name' onChange={this.handleChange} />
+                Property Name<input type='text' value={updateName} name='name' onChange={(e) => this.updateName(e.target.value)} value={this.state.name} />
 
-                Address<input type='text' value={address} name='address' onChange={this.handleChange} />
+                Address<input type='text' value={updateAddress} name='address' onChange={(e) => this.updateAddress(e.target.value)} value={this.state.address} />
 
-                City<input type='text' value={city} name='city' onChange={this.handleChange} />
+                {/* City<input type='text' value={updateCity} name='city' onChange={this.handleChange} /> */}
+
+                <button onClick={() => this.handleEditSave()}>Complete</button>
             
             
             </div>

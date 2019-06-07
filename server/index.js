@@ -15,9 +15,10 @@ massive(CONNECTION_STRING).then(db => {
 });
 
 //endpoints
-app.get('/api/properties', controller.getHouse);
-app.delete('/api/properties/:id', controller.deleteHouse);
-app.put('/api/properties/:id', controller.updateHouse);
+app.get('/api/houses', controller.getHouse);
+app.delete('/api/house/:id', controller.deleteHouse);
+app.put('/api/house/:id', controller.updateHouse);
+app.post('/api/house', controller.addHouse);
 
 app.listen(SERVER_PORT, () => {
     console.log(`Listening on port ${SERVER_PORT}`);
