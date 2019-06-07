@@ -74,6 +74,15 @@ this.setState({adress: value})
 console.log(value)
 }
 
+updateCity(value) {
+    this.setState({city: value})
+    console.log(value)
+    }
+
+
+
+
+
 
 handleEditSave() {
 let { name, address, city, state, zip } = this.state,
@@ -99,7 +108,7 @@ axios.put('/api/house/:id', {name:name, address:address, city:city, state:state,
 
                 Address<input type='text' value={updateAddress} name='address' onChange={(e) => this.updateAddress(e.target.value)} value={this.state.address} />
 
-                {/* City<input type='text' value={updateCity} name='city' onChange={this.handleChange} /> */}
+                City<input type='text' value={updateCity} name='city' onChange={(e) => this.updateCity(e.target.value) } value={this.state.city} />
 
                 <button onClick={() => this.handleEditSave()}>Complete</button>
             
